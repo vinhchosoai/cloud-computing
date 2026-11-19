@@ -1,0 +1,5 @@
+monthly_requests,aca_usd_no_grant,aca_usd_with_grant,vm_b2s_usd,breakeven_reqs_no_grant
+1000,0.0007,0.0,36.42,49380338
+100000,0.0738,0.0,36.42,49380338
+1000000,0.7375,0.0,36.42,49380338
+10000000,7.375,3.2,36.42,49380338

@@ -1,0 +1,80 @@
+{
+  "title": "AI Inference Service - Performance & Drift",
+  "uid": "ai-inference-v1",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request Rate (RPS)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [
+        {
+          "expr": "sum(rate(inference_requests_total{endpoint=\"/v1/predict\"}[1m])) by (status)",
+          "legendFormat": "status={{status}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Latency p50 / p95 / p99 (s)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(inference_request_latency_seconds_bucket{endpoint=\"/v1/predict\"}[1m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(inference_request_latency_seconds_bucket{endpoint=\"/v1/predict\"}[1m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(inference_request_latency_seconds_bucket{endpoint=\"/v1/predict\"}[1m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Data Drift PSI (Threshold 0.20)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "targets": [
+        {
+          "expr": "inference_drift_psi",
+          "legendFormat": "max PSI"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Process Resident Memory (MB)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes / 1024 / 1024",
+          "legendFormat": "RSS MB"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Model Load Time (s)",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 16},
+      "targets": [{"expr": "inference_model_load_seconds"}]
+    },
+    {
+      "id": 6,
+      "title": "Active Requests",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 16},
+      "targets": [{"expr": "inference_active_requests"}]
+    }
+  ]
+}
+

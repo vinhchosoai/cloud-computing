@@ -1,0 +1,35 @@
+groups:
+  - name: ai_inference_alerts
+    rules:
+      - alert: HighInferenceLatencyP95
+        expr: histogram_quantile(0.95, sum(rate(inference_request_latency_seconds_bucket{endpoint="/v1/predict"}[1m])) by (le)) > 0.5
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 inference latency > 500ms"
+          description: "p95 latency has exceeded 0.5s for 30s."
+
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(inference_requests_total{status=~"5..|429"}[1m]))
+            /
+            clamp_min(sum(rate(inference_requests_total[1m])), 1)
+          ) > 0.05
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Error rate > 5%"
+          description: "More than 5% of requests returned 5xx or 429."
+
+      - alert: DataDriftPSIHigh
+        expr: inference_drift_psi > 0.20
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Input/Prediction drift detected (PSI > 0.20)"
+          description: "Population Stability Index exceeded 0.20 threshold."
+
