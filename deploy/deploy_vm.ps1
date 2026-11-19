@@ -1,9 +1,9 @@
 param(
-    [string]$ResourceGroup = "rg-ai-inference",
-    [string]$Location = "eastasia",
-    [string]$VmName = "vm-ai-inference",
-    [string]$VmSize = "Standard_B2s",
-    [string]$AdminUser = "azureuser"
+  [string]$ResourceGroup = "rg-ai-inference",
+  [string]$Location = "eastasia",
+  [string]$VmName = "vm-ai-inference",
+  [string]$VmSize = "Standard_B2als_v2",
+  [string]$AdminUser = "azureuser"
 )
 
 $ErrorActionPreference = "Stop"
@@ -27,19 +27,19 @@ $cloudInit | Set-Content -Path $cloudInitPath -Encoding UTF8
 
 Write-Host "Creating VM $VmName ($VmSize) in $ResourceGroup ($Location)..."
 & $az vm create `
-    --resource-group $ResourceGroup `
-    --name $VmName `
-    --location $Location `
-    --image Ubuntu2404 `
-    --size $VmSize `
-    --admin-username $AdminUser `
-    --generate-ssh-keys `
-    --custom-data $cloudInitPath `
-    --public-ip-sku Standard `
-    -o table
+  --resource-group $ResourceGroup `
+  --name $VmName `
+  --location $Location `
+  --image Ubuntu2404 `
+  --size $VmSize `
+  --admin-username $AdminUser `
+  --generate-ssh-keys `
+  --custom-data $cloudInitPath `
+  --public-ip-sku Standard `
+  -o table
 
 $nsgName = "${VmName}NSG"
-Write-Host "Restricting NSG $nsgName: SSH from $myIp only, opening 8000 (API) & 3000 (Grafana)..."
+Write-Host "Restricting NSG ${nsgName}: SSH from $myIp only, opening 8000 (API) & 3000 (Grafana)..."
 & $az network nsg rule update --resource-group $ResourceGroup --nsg-name $nsgName --name default-allow-ssh --source-address-prefixes $myIp -o none
 & $az network nsg rule create --resource-group $ResourceGroup --nsg-name $nsgName --name allow-api-8000 --priority 1010 --destination-port-ranges 8000 --protocol Tcp --access Allow -o none
 & $az network nsg rule create --resource-group $ResourceGroup --nsg-name $nsgName --name allow-grafana-3000 --priority 1020 --destination-port-ranges 3000 --protocol Tcp --access Allow -o none

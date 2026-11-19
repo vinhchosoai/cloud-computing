@@ -6,7 +6,9 @@ const BATCH_SIZE = parseInt(__ENV.BATCH_SIZE || "1", 10);
 const TARGET_URL = __ENV.TARGET_URL || "http://127.0.0.1:8000";
 const API_KEY = __ENV.API_KEY || "bench-secret-key-change-me";
 const VUS = parseInt(__ENV.VUS || "10", 10);
+const RAMP = __ENV.RAMP || "10s";
 const DURATION = __ENV.DURATION || "2m";
+const DOWN = __ENV.DOWN || "5s";
 
 const serverLatencyTrend = new Trend("server_latency_ms");
 
@@ -23,9 +25,9 @@ const SAMPLE_TEXTS = [
 
 export const options = {
   stages: [
-    { duration: "20s", target: VUS },
+    { duration: RAMP, target: VUS },
     { duration: DURATION, target: VUS },
-    { duration: "10s", target: 0 }
+    { duration: DOWN, target: 0 }
   ],
   thresholds: {
     http_req_failed: ["rate<0.05"]

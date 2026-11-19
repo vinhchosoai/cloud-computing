@@ -8,7 +8,10 @@ param(
     [int[]]$BatchSizes = @(1, 8, 32),
     [int[]]$VUs = @(1, 10, 50),
     [int]$Repeats = 3,
-    [string]$Duration = "2m"
+    [string]$Duration = "2m",
+    [string]$Ramp = "10s",
+    [string]$Down = "5s",
+    [int]$SleepSeconds = 3
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,10 +27,12 @@ foreach ($batch in $BatchSizes) {
                 -e API_KEY="$ApiKey" `
                 -e BATCH_SIZE="$batch" `
                 -e VUS="$vu" `
+                -e RAMP="$Ramp" `
                 -e DURATION="$Duration" `
+                -e DOWN="$Down" `
                 --summary-export="$outFile" `
                 loadtest/predict.js
-            Start-Sleep -Seconds 10
+            Start-Sleep -Seconds $SleepSeconds
         }
     }
 }

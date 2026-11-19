@@ -22,4 +22,6 @@ results/raw/*.json
 results/raw/*.csv
 !results/raw/.gitkeep
 *.log
+~$*
+
 

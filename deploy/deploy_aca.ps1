@@ -45,7 +45,7 @@ Write-Host "[4/4] Deploying Container App: $AppName (1 vCPU, 2 GiB, min=$MinRepl
     --scale-rule-name http-concurrency `
     --scale-rule-type http `
     --scale-rule-http-concurrency 10 `
-    --secrets "api-keys=$ApiKey,$BenchmarkKey" "bench-key=$BenchmarkKey" `
+    --secrets "api-keys=$ApiKey" "bench-key=$BenchmarkKey" `
     --env-vars `
         "API_KEYS=secretref:api-keys" `
         "BENCHMARK_API_KEY=secretref:bench-key" `
