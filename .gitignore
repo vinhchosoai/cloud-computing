@@ -1,0 +1,25 @@
+# Python & uv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Environment & Secrets
+.env
+*.pem
+*.key
+
+# MLflow & Model Artifacts (large binaries)
+mlruns/
+mlartifacts/
+mlflow.db
+artifacts/
+
+# Results & logs
+results/raw/*.json
+results/raw/*.csv
+!results/raw/.gitkeep
+*.log
+

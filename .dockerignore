@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.git/
+mlruns/
+mlartifacts/
+mlflow.db
+artifacts/_tmp_*
+results/
+docs/
+analysis/
+loadtest/
+tests/
+.env
+
